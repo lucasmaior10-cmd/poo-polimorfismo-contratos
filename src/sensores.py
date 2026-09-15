@@ -1,91 +1,89 @@
 from abc import ABC, abstractmethod
-from math import isfinite
-
+import math
 
 class Sensor(ABC):
     def __init__(self, tag: str):
         self._tag = tag
 
-    @property
-    def tag(self):
+    def tag(self) -> str:
         return self._tag
 
     @abstractmethod
-    def valor(self):
-        raise NotImplementedError
+    def valor(self) -> float:
+        pass
 
     @abstractmethod
-    def unidade(self):
-        raise NotImplementedError
+    def unidade(self) -> str:
+        pass
 
     @abstractmethod
-    def atualizar(self, leitura):
-        raise NotImplementedError
+    def atualizar(self, leitura: float) -> bool:
+        pass
 
     @abstractmethod
-    def em_alerta(self):
-        raise NotImplementedError
+    def em_alerta(self) -> bool:
+        pass
 
 
 class SensorNivel(Sensor):
-    def __init__(self, tag):
+    def __init__(self, tag: str):
         super().__init__(tag)
         self._valor = 50.0
 
-    def valor(self):
+    def valor(self) -> float:
         return self._valor
 
-    def unidade(self):
+    def unidade(self) -> str:
         return "%"
 
-    def atualizar(self, leitura):
-        if not isfinite(leitura) or leitura < 0 or leitura > 100:
+    def atualizar(self, leitura: float) -> bool:
+        if not math.isfinite(leitura) or leitura < 0.0 or leitura > 100.0:
             return False
         self._valor = leitura
         return True
 
-    def em_alerta(self):
-        # TODO: substituir o marcador pelo comportamento contratado.
-        return False
+    def em_alerta(self) -> bool:
+        return self._valor < 20.0
 
 
 class SensorTemperatura(Sensor):
-    def __init__(self, tag):
+    def __init__(self, tag: str):
         super().__init__(tag)
         self._valor = 25.0
 
-    def valor(self):
+    def valor(self) -> float:
         return self._valor
 
-    def unidade(self):
+    def unidade(self) -> str:
         return "C"
 
-    def atualizar(self, leitura):
-        if not isfinite(leitura) or leitura < -40 or leitura > 125:
+    def atualizar(self, leitura: float) -> bool:
+        if not math.isfinite(leitura) or leitura < -40.0 or leitura > 125.0:
             return False
         self._valor = leitura
         return True
 
-    def em_alerta(self):
-        # TODO: substituir o marcador pelo comportamento contratado.
-        return False
+    def em_alerta(self) -> bool:
+        return self._valor > 45.0
 
 
 class SensorPressao(Sensor):
-    def __init__(self, tag):
+    def __init__(self, tag: str):
         super().__init__(tag)
         self._valor = 1.0
 
-    def valor(self):
+    def valor(self) -> float:
         return self._valor
 
-    def unidade(self):
+    def unidade(self) -> str:
         return "bar"
 
-    def atualizar(self, leitura):
-        # TODO ETAPA 02: validar antes de alterar o estado.
-        return False
+    def atualizar(self, leitura: float) -> bool:
+        if not math.isfinite(leitura) or leitura < 0.0 or leitura > 10.0:
+            return False
+        self._valor = leitura
+        return True
 
-    def em_alerta(self):
-        # TODO: substituir o marcador pelo comportamento contratado.
-        return False
+    def em_alerta(self) -> bool:
+        return self._valor > 8.0
+        
